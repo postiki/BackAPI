@@ -2,23 +2,21 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const db = require("./app/models");
-
+const url = require('./app/config/db.config')
 const Role = db.role;
 
 const app = express();
 
 app.use(cors());
-
 app.use(bodyParser.json());
 
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
 
-db.mongoose
-    .connect("mongodb+srv://postiki:33ee2w1q@cluster0.lkbdg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
+db.mongoose.connect(url.url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
     .then(() => {
         console.log("Successfully connect to MongoDB.");
         initial();
@@ -28,10 +26,8 @@ db.mongoose
         process.exit();
     });
 
-// parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: true}));
 
-// simple route
 app.get("/", (req, res) => {
     res.json({message: "Welcome to postiki application."});
 });
@@ -72,7 +68,6 @@ function initial() {
     });
 }
 
-// set port, listen for requests
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);

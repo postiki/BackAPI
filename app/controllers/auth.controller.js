@@ -20,11 +20,7 @@ exports.signup = (req, res) => {
         }
 
         if (req.body.roles) {
-            Role.find(
-                {
-                    name: {$in: req.body.roles}
-                },
-                (err, roles) => {
+            Role.find({name: {$in: req.body.roles}}, (err, roles) => {
                     if (err) {
                         res.status(500).send({message: err});
                         return;
@@ -62,7 +58,7 @@ exports.signup = (req, res) => {
     });
 };
 
-exports.signin = (req, res) => {
+exports.login = (req, res) => {
     User.findOne({
         username: req.body.username
     })
